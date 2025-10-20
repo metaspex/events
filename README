@@ -4,7 +4,7 @@ This repository contains an entire professional application counting:
 - 36 messaging-related web services.
 - 181 Metaspex foundation ontology web services (e.g., security-related).
 
-For a total of 291.
+For a total of 291 web services.
 
 This application performs event management. The ontology deals with venues,
 guests, hosts, organizers, bookings, invites and more.
