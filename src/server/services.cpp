@@ -220,7 +220,7 @@ namespace events {
 
   struct event_doc_id_adder
   {
-    json::array_type operator()(const json::array_type& t, const rfr<event_id_payload>& query) const {
+    row_key_t operator()(const row_key_t& t, const rfr<event_id_payload>& query) const {
       return build_key(query->event_id, t);
     }
   };
@@ -1315,7 +1315,7 @@ namespace events {
   struct venue_doc_id_public_adder
   {
     template <typename Query>
-    json::array_type operator()(const json::array_type& t, const rfr<Query>& query) const {
+    row_key_t operator()(const row_key_t& t, const rfr<Query>& query) const {
       HX2A_LOG(trace) << "Adding the doc id of the venue " << query->venue_id << " and the private indicator to false as the first element of the key in paginated services.";
       return build_key(
 		       query->venue_id,
@@ -1356,7 +1356,7 @@ namespace events {
   struct venue_doc_id_adder
   {
     template <typename Query>
-    json::array_type operator()(const json::array_type& t, const rfr<Query>& query) const {
+    row_key_t operator()(const row_key_t& t, const rfr<Query>& query) const {
       return build_key(
 		       query->venue_id,
 		       t
