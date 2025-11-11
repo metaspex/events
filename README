@@ -18,7 +18,7 @@ need is usually pushed to extreme needs. In this specific instance it was not
 needed to do more than a simple monolith.
 
 Once this application is compiled, the complete Nginx binary module containing
-all the application, including security is less than 25 MB, which is extremely
+all the application, including security is less than 23 MB, which is extremely
 small. It is comparable to the size of a single modern Internet HTML page.
 
 The binary contains all the 291 web services and associated business logic.
