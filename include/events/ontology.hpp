@@ -77,7 +77,8 @@ namespace events {
   class venue_claim: public root<>
   {
     HX2A_ROOT(venue_claim, type_tag<"venue_claim">, 1, root,
-	      (_user, _venue));
+	      ((_user, "u"),
+	       (_venue, "v")));
   public:
 
     venue_claim(const user_r& u, const venue_r& v):
@@ -102,21 +103,32 @@ namespace events {
     
   private:
 
-    link<user, "u"> _user;
-    link<venue, "v"> _venue;
+    link<user> _user;
+    link<venue> _venue;
   };
   
   class venue: public root<>
   {
     HX2A_ROOT(venue, type_tag<"venue">, 1, root,
-	      (_owner, _name, _private, _category, _category_description, _position, _address,
-	       _capacity, _description, _event_confirmation_required, _images, _rating));
+	      ((_owner, "o"),
+	       (_name, "n"),
+	       (_private, "p"),
+	       (_category, "c"),
+	       (_category_description, "cd"),
+	       (_position, "g"),
+	       (_address, "a"),
+	       (_capacity, "C"),
+	       (_description, "d"),
+	       (_event_confirmation_required, "ecr"),
+	       (_images, "i"),
+	       (_rating, "r")));
   public:
 
-    using images_type = slot_vector<string, "i">;
+    using images_type = slot_vector<string>;
     using images_const_iterator = images_type::const_iterator;
     using images_iterator = images_type::iterator;
     using rating_t = double;
+
     static constexpr rating_t no_rating = 0;
 
     // A null capacity means unlimited.
@@ -221,32 +233,46 @@ namespace events {
   private:
 
     // If the user is removed, all the corresponding venues are removed too.
-    link<user, "o"> _owner;
-    slot<string, "n"> _name;
+    link<user> _owner;
+    slot<string> _name;
     // A non bool might be more type-safe.
-    slot<bool, "p"> _private;
-    slot<category_t, "c"> _category;
-    slot<string, "cd"> _category_description;
+    slot<bool> _private;
+    slot<category_t> _category;
+    slot<string> _category_description;
     // We do not need full HTML5 geolocation, only latitude and longitude.
-    own<position, "g"> _position;
-    own<address, "a"> _address;
-    slot<capacity_t, "C"> _capacity;
-    slot<string, "d"> _description;
-    slot<bool, "ecr"> _event_confirmation_required;
+    own<position> _position;
+    own<address> _address;
+    slot<capacity_t> _capacity;
+    slot<string> _description;
+    slot<bool> _event_confirmation_required;
     // Storing only the URLs.
     images_type _images;
-    slot<rating_t, "r"> _rating;
+    slot<rating_t> _rating;
   };
 
   // The organizer is not necessarily a guest. He'll need to book the event to be a guest.
   class event: public root<>
   {
     HX2A_ROOT(event, type_tag<"event">, 1, root,
-	      (_organizer, _name, _private, _category, _category_description, _venue, _state, _state_change_timestamp, _conversation,
-	       _capacity, _start, _duration, _end, _bookings_notice_time, _bookings_count, _images, _report_count));
+	      ((_organizer, "o"),
+	       (_name, "n"),
+	       (_private, "p"),
+	       (_category, "c"),
+	       (_category_description, "cd"),
+	       (_venue, "v"),
+	       (_state, "st"),
+	       (_state_change_timestamp, "stt"),
+	       (_conversation, "conv"),
+	       (_capacity, "C"), (_start, "s"),
+	       (_duration, "d"),
+	       (_end, "e"),
+	       (_bookings_notice_time, "bnt"),
+	       (_bookings_count, "bc"),
+	       (_images, "i"),
+	       (_report_count, "rc")));
   public:
 
-    using images_type = slot_vector<string, "i">;
+    using images_type = slot_vector<string>;
     using images_const_iterator = images_type::const_iterator;
     using images_iterator = images_type::iterator;
     using duration_t = time_t;
@@ -635,37 +661,39 @@ namespace events {
 
     static time_t calculate_end(time_t start, time_t duration){ return duration == unspecified_duration ? unspecified_end : start + duration; }
     
-    link<user, "o"> _organizer;
-    slot<string, "n"> _name;
+    link<user> _organizer;
+    slot<string> _name;
     // A non bool might be more type-safe.
-    slot<bool, "p"> _private;
-    slot<category_t, "c"> _category;
-    slot<string, "cd"> _category_description;
-    link<venue, "v"> _venue;
-    slot<state_t, "st"> _state;
-    slot<time_t, "stt"> _state_change_timestamp;
+    slot<bool> _private;
+    slot<category_t> _category;
+    slot<string> _category_description;
+    link<venue> _venue;
+    slot<state_t> _state;
+    slot<time_t> _state_change_timestamp;
     // We do not need to remove the event in case the conversation disappears. Conversely if the event is canceled, the conversation
     // is preserved, as it should.
     // The organizer of the event is the owner of the conversation. The participation of the owner of a conversation is on the conversation
     // document itself.
-    weak_link<messenger::conversation, "conv"> _conversation;
-    slot<capacity_t, "C"> _capacity;
-    slot<time_t, "s"> _start;
-    slot<duration_t, "d"> _duration;
-    slot<time_t, "e"> _end;
-    slot<time_t, "bnt"> _bookings_notice_time;
+    weak_link<messenger::conversation> _conversation;
+    slot<capacity_t> _capacity;
+    slot<time_t> _start;
+    slot<duration_t> _duration;
+    slot<time_t> _end;
+    slot<time_t> _bookings_notice_time;
     // The number of bookings could be calculated using the index on all bookings. It would be costly. We denormalize.
-    slot<capacity_t, "bc"> _bookings_count;
+    slot<capacity_t> _bookings_count;
     // Storing only the URLs.
     images_type _images;
-    slot<uint64_t, "rc"> _report_count;
+    slot<uint64_t> _report_count;
   };
 
   // Used as well as a payload.
   class contact: public element<>
   {
     HX2A_ELEMENT(contact, type_tag<"contact">, element,
-		 (_first_name, _last_name, _email));
+		 ((_first_name, "f"),
+		  (_last_name, "l"),
+		  (_email, "e")));
   public:
 
     contact(const string& first_name, const string& last_name, const string& email):
@@ -687,19 +715,21 @@ namespace events {
     
   private:
 
-    slot<string, "f"> _first_name;
-    slot<string, "l"> _last_name;
-    slot<string, "e"> _email;
+    slot<string> _first_name;
+    slot<string> _last_name;
+    slot<string> _email;
   };
   
   // Invite without an identified guest. The invite can be shared with multiple guests.
   class open_invite: public root<>
   {
     HX2A_ROOT(open_invite, type_tag<"open_invite">, 1, root,
-	      (_event, _host, _contacts));
+	      ((_event, "e"),
+	       (_host, "h"),
+	       (_contacts, "c")));
   public:
 
-    using contacts_type = own_vector<contact, "c">;
+    using contacts_type = own_vector<contact>;
     
     open_invite(
 		const event_r& e,
@@ -762,10 +792,10 @@ namespace events {
   private:
     
     // An open invite disappears if the event is removed.
-    link<event, "e"> _event;
+    link<event> _event;
     // The host is the one creating the open invite. Note that it's different from the event organizer.
     // It's a strong link because we retract the open invite if the host is removed.
-    link<user, "h"> _host;
+    link<user> _host;
     contacts_type _contacts;
   };
 
@@ -773,7 +803,9 @@ namespace events {
   class invite: public root<>
   {
     HX2A_ROOT(invite, type_tag<"invite">, 1, root,
-	      (_event, _host, _guest));
+	      ((_event, "e"),
+	       (_host, "h"),
+	       (_guest, "g")));
   public:
 
     invite(
@@ -815,12 +847,12 @@ namespace events {
   private:
     
     // An invite disappears if the event is removed.
-    link<event, "e"> _event;
+    link<event> _event;
     // The host is the one creating the invite. Note that it's different from the event organizer.
     // It's a strong link because we retract the invite if the host is removed.
-    link<user, "h"> _host;
+    link<user> _host;
     // An invite disappears when the guest user is removed.
-    link<user, "g"> _guest;
+    link<user> _guest;
   };
 
   // The document identifier of the booking can be used to generate a 2D barcode that can be scanned at event
@@ -830,7 +862,12 @@ namespace events {
   class booking: public root<>
   {
     HX2A_ROOT(booking, type_tag<"booking">, 1, root,
-	      (_event, _host, _guest, _messenger_participation, _note, _check_in_timestamp));
+	      ((_event, "e"),
+	       (_host, "h"),
+	       (_guest, "g"),
+	       (_messenger_participation, "mp"),
+	       (_note, "n"),
+	       (_check_in_timestamp, "cit")));
   public:
 
     // Increments the booking count of the event.
@@ -918,21 +955,23 @@ namespace events {
   private:
 
     // Strong link. The booking is removed if the event is removed.
-    link<event, "e"> _event;
+    link<event> _event;
     // The booking is retained even if the host (the user who invited the guest) is removed.
-    weak_link<user, "h"> _host;
-    link<user, "g"> _guest;
+    weak_link<user> _host;
+    link<user> _guest;
     // No need to load the participation when inspecting a booking.
-    weak_link<messenger::participation, "mp"> _messenger_participation;
-    slot<string, "n"> _note;
+    weak_link<messenger::participation> _messenger_participation;
+    slot<string> _note;
     // If used, 0 means not checked in.
-    slot<time_t, "cit"> _check_in_timestamp;
+    slot<time_t> _check_in_timestamp;
   };
 
   class news: public root<>
   {
     HX2A_ROOT(news, type_tag<"news">, 1, root,
-	      (_venue, _text, _expiry_timestamp));
+	      ((_venue, "v"),
+	       (_text, "t"),
+	       (_expiry_timestamp, "e")));
   public:
 
     news(const venue_r& v, const string& text, time_t expiry_timestamp):
@@ -972,9 +1011,9 @@ namespace events {
       }
     }
     
-    link<venue, "v"> _venue;
-    slot<string, "t"> _text;
-    slot<time_t, "e"> _expiry_timestamp;
+    link<venue> _venue;
+    slot<string> _text;
+    slot<time_t> _expiry_timestamp;
   };
   
   inline void venue_claim::accept(){

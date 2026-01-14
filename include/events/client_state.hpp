@@ -31,7 +31,8 @@ namespace events {
   class client_state: public root<>
   {
     HX2A_ROOT(client_state, type_tag<"client_state">, 1, root,
-	      (_user, _messenger_client_state));
+	      ((_user, "u"),
+	       (_messenger_client_state, "m")));
 
   public:
 
@@ -98,9 +99,8 @@ namespace events {
       }
     }
 
-    link<user, "u"> _user;
-    own<messenger::client_state, "m"> _messenger_client_state;
-    
+    link<user> _user;
+    own<messenger::client_state> _messenger_client_state;
   };
     
 } // End namespace events.

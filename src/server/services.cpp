@@ -13,7 +13,6 @@
 #include "hx2a/json_leading_value_remover.hpp"
 #include "hx2a/db/connector.hpp"
 #include "hx2a/build_key.hpp"
-#include "hx2a/debug_mode.hpp"
 #include "hx2a/user_doc_id_adder.hpp"
 #include "hx2a/user_email_adder.hpp"
 #include "hx2a/projector.hpp"
