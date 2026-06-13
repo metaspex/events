@@ -6,11 +6,11 @@
 #include "hx2a/server.hpp"
 #include "hx2a/service.hpp"
 #include "hx2a/session_info.hpp"
-#include "hx2a/login_checker_prologue.hpp"
-#include "hx2a/login_checker_session_prologue.hpp"
-#include "hx2a/root_checker_prologue.hpp"
+#include "hx2a/prologue/login_checker_prologue.hpp"
+#include "hx2a/prologue/login_checker_session_prologue.hpp"
+#include "hx2a/prologue/root_checker_prologue.hpp"
 #include "hx2a/paginated_services.hpp"
-#include "hx2a/json_leading_value_remover.hpp"
+#include "hx2a/json/leading_value_remover.hpp"
 #include "hx2a/db/connector.hpp"
 #include "hx2a/build_key.hpp"
 #include "hx2a/user_doc_id_adder.hpp"
@@ -42,7 +42,7 @@ namespace events {
     }
 
     db::connector cn{client_state_dbname};
-    return client_state::get(cn, session_id).or_throw<messenger::client_state_does_not_exist>();    
+    return root_get<client_state>(cn, session_id).or_throw<messenger::client_state_does_not_exist>();    
   }
 
   inline client_state_r set_client_state(session_info& si, const user_r& u, const string& token){
@@ -231,7 +231,7 @@ namespace events {
       login_checker_prologue(u)
     {
       // Looking for the event and checking that it exists and the user calling the service is the organizer.
-      event_r e = event::get(c, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(c, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, user);
     }
   };
@@ -265,21 +265,21 @@ namespace events {
   auto _venue_claim = service<srv_tag<"venue_claim">>
     ([](const login_checker_prologue& prologue, const rfr<venue_id_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       return make<venue_claim_id_payload>(v->claim(cn, prologue.user));
     });
 
   auto _venue_claim_accept = service<srv_tag<"venue_claim_accept">, root_checker_prologue>
     ([](const rfr<venue_claim_id_payload>& query){
       db::connector cn{dbname};
-      venue_claim_r v = venue_claim::get(cn, query->venue_claim_id).or_throw<venue_claim_does_not_exist>();
+      venue_claim_r v = root_get<venue_claim>(cn, query->venue_claim_id).or_throw<venue_claim_does_not_exist>();
       v->accept();
     });
 
   auto _venue_claim_reject = service<srv_tag<"venue_claim_reject">, root_checker_prologue>
     ([](const rfr<venue_claim_id_payload>& query){
       db::connector cn{dbname};
-      venue_claim_r v = venue_claim::get(cn, query->venue_claim_id).or_throw<venue_claim_does_not_exist>();
+      venue_claim_r v = root_get<venue_claim>(cn, query->venue_claim_id).or_throw<venue_claim_does_not_exist>();
       v->reject();
     });
 
@@ -334,7 +334,7 @@ namespace events {
   auto _venue_get = service<srv_tag<"venue_get">>
     ([](const user_p& u, const rfr<venue_id_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       privacy_checker()(v, u);
       return make<venue_data_payload>(v);
     });
@@ -342,7 +342,7 @@ namespace events {
   auto _venue_get_from_invite = service<srv_tag<"venue_get_from_invite">>
     ([](const user_p& u, const rfr<invite_id_payload>& query){
       db::connector cn{dbname};
-      invite_r i = invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      invite_r i = root_get<invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
 
       if (i->get_guest() != u){
 	throw unauthorized();
@@ -354,7 +354,7 @@ namespace events {
   auto _venue_get_from_booking = service<srv_tag<"venue_get_from_booking">>
     ([](const user_p& u, const rfr<booking_id_payload>& query){
       db::connector cn{dbname};
-      booking_r b = booking::get(cn, query->booking_id).or_throw<booking_does_not_exist>();
+      booking_r b = root_get<booking>(cn, query->booking_id).or_throw<booking_does_not_exist>();
 
       if (b->get_guest() != u){
 	throw unauthorized();
@@ -369,7 +369,7 @@ namespace events {
       db::connector cn{dbname};
       // If successful we're sure the address is present.
       query->validate();
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       owner_checker()(v, prologue.user);
       v->update(query->name, query->category, query->category_description, query->addr->copy(), query->capacity, query->description, query->event_confirmation_required, query->rating);
     });
@@ -378,7 +378,7 @@ namespace events {
   auto _venue_update_images = service<srv_tag<"venue_update_images">>
     ([](const login_checker_prologue& prologue, const rfr<venue_update_images_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       owner_checker()(v, prologue.user);
       v->update(query);
     });
@@ -386,17 +386,17 @@ namespace events {
   auto _venue_transfer = service<srv_tag<"venue_transfer">>
     ([](const login_checker_prologue& prologue, const rfr<venue_transfer_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       owner_checker()(v, prologue.user);
       db::connector dc(db::directory_database);
-      user_r new_owner = user::get(dc, query->new_owner_id).or_throw<user_does_not_exist>();
+      user_r new_owner = root_get<user>(dc, query->new_owner_id).or_throw<user_does_not_exist>();
       v->transfer(new_owner);
     });
 
   auto _venue_remove = service<srv_tag<"venue_remove">>
     ([](const login_checker_prologue& prologue, const rfr<venue_id_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       owner_checker()(v, prologue.user);
       v->unpublish();
     });
@@ -624,7 +624,7 @@ namespace events {
   auto _event_create = service<srv_tag<"event_create">>
     ([](const login_checker_prologue& prologue, const rfr<event_create_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       query->validate();
       // The event cache will be updated by the cache reading the database.
       event_r e = make<event>(cn, prologue.user, query->name, query->is_private, query->category, query->category_description, v, query->capacity, query->start, query->duration, query->bookings_notice_time, query->organizer_display_name);
@@ -641,7 +641,7 @@ namespace events {
   auto _event_get = service<srv_tag<"event_get">>
     ([](const user_p& u, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       privacy_checker()(cn, e, u);
       return make<event_data_payload>(e);
     });
@@ -651,7 +651,7 @@ namespace events {
   auto _event_confirmation_request = service<srv_tag<"event_confirmation_request">>
     ([](const login_checker_prologue& prologue, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
       e->request_confirmation();
       // Should send a notification to the venue owner here.
@@ -661,7 +661,7 @@ namespace events {
   auto _event_confirm = service<srv_tag<"event_confirm">>
     ([](const login_checker_prologue& prologue, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       owner_checker()(e->get_venue(), prologue.user);
       e->confirm();
       // Should send a notification to the organizer here.
@@ -671,7 +671,7 @@ namespace events {
   auto _event_reject = service<srv_tag<"event_reject">>
     ([](const login_checker_prologue& prologue, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       owner_checker()(e->get_venue(), prologue.user);
       e->reject();
       // Should send a notification to the organizer here.
@@ -681,7 +681,7 @@ namespace events {
   auto _event_get_for_organizer = service<srv_tag<"event_get_for_organizer">>
     ([](const login_checker_prologue& prologue, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
       return make<event_data_for_organizer_payload>(e);
     });
@@ -711,7 +711,7 @@ namespace events {
   auto _event_cancel = service<srv_tag<"event_cancel">>
     ([](const login_checker_prologue& prologue, const rfr<event_cancel_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_or_venue_owner_checker()(e, prologue.user);
       e->cancel(query->reason);
     });
@@ -720,7 +720,7 @@ namespace events {
   auto _event_update = service<srv_tag<"event_update">>
     ([](const login_checker_prologue& prologue, const rfr<event_update_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
       // The update payload sets capacity to 0 if unspecified.
       e->update(query->name, query->category, query->category_description, query->capacity, query->start, query->duration, query->bookings_notice_time);
@@ -730,7 +730,7 @@ namespace events {
   auto _event_report = service<srv_tag<"event_report">>
     ([](const login_checker_prologue& prologue, const rfr<event_id_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       guest_checker()(cn, e, prologue.user);
       e->report();
     });
@@ -739,7 +739,7 @@ namespace events {
   auto _event_update_images = service<srv_tag<"event_update_images">>
     ([](const login_checker_prologue& prologue, const rfr<event_update_images_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
       e->update(query);
     });
@@ -748,9 +748,9 @@ namespace events {
   auto _event_change_venue = service<srv_tag<"event_change_venue">>
     ([](const login_checker_prologue& prologue, const rfr<event_change_venue_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       e->set_venue(v);
       // An email could be sent to the venue owner and guests and invited people could be notified.
     });
@@ -994,7 +994,7 @@ namespace events {
   auto _open_invite_create = service<srv_tag<"open_invite_create">>
     ([](const login_checker_prologue& prologue, const rfr<open_invite_create_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
 
       if (
 	  !e->is_bookable() ||
@@ -1015,7 +1015,7 @@ namespace events {
   auto _open_invite_get = service<srv_tag<"open_invite_get">>
     ([](const rfr<invite_id_payload>& query){
       db::connector cn{dbname};
-      open_invite_r i = open_invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      open_invite_r i = root_get<open_invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
       return make<invite_details_payload>(i);
     });
 
@@ -1037,7 +1037,7 @@ namespace events {
 	throw unauthorized();
       }
       
-      open_invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>()->add_contact(make<contact>(query->first_name, query->last_name, email));
+      root_get<open_invite>(cn, query->invite_id).or_throw<invite_does_not_exist>()->add_contact(make<contact>(query->first_name, query->last_name, email));
     });
 
   // Only the organizer of the event or a person with a booking or an invite can create an invite.
@@ -1045,7 +1045,7 @@ namespace events {
   auto _invite_create = service<srv_tag<"invite_create">>
     ([](const login_checker_prologue& prologue, const rfr<invite_create_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
 
       if (
 	  !e->is_bookable() ||
@@ -1058,7 +1058,7 @@ namespace events {
       }
 
       db::connector dc(db::directory_database);
-      user_r g = user::get(dc, query->guest_id).or_throw<user_does_not_exist>();
+      user_r g = root_get<user>(dc, query->guest_id).or_throw<user_does_not_exist>();
 
       // Checking that no invite for the user exists yet.
       if (e->get_invite(cn, g)){
@@ -1080,7 +1080,7 @@ namespace events {
   auto _invite_get = service<srv_tag<"invite_get">>
     ([](const login_checker_prologue& prologue, const rfr<invite_id_payload>& query){
       db::connector cn{dbname};
-      invite_r i = invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      invite_r i = root_get<invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
       organizer_host_or_guest_checker()(i, prologue.user);
       return make<invite_details_payload>(i);
     });
@@ -1089,7 +1089,7 @@ namespace events {
   auto _open_invite_accept = service<srv_tag<"open_invite_accept">>
     ([](const login_checker_prologue& prologue, const rfr<invite_accept_payload>& query){
       db::connector cn{dbname};
-      open_invite_r i = open_invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      open_invite_r i = root_get<open_invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
       // Creating the booking will increment the booking count of the event.
       booking_r b = i->accept(cn, prologue.user, query->display_name, query->note);
       return make<booking_id_payload>(b);
@@ -1099,7 +1099,7 @@ namespace events {
   auto _open_invite_decline = service<srv_tag<"open_invite_decline">>
     ([](const login_checker_prologue& prologue, const rfr<invite_id_payload>& query){
       db::connector cn{dbname};
-      open_invite_r i = open_invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      open_invite_r i = root_get<open_invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
       i->decline(prologue.user);
     });
 
@@ -1107,7 +1107,7 @@ namespace events {
   auto _invite_accept = service<srv_tag<"invite_accept">>
     ([](const login_checker_prologue& prologue, const rfr<invite_accept_payload>& query){
       db::connector cn{dbname};
-      invite_r i = invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      invite_r i = root_get<invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
 
       if (i->get_guest() != prologue.user){
 	throw unauthorized();
@@ -1124,7 +1124,7 @@ namespace events {
   auto _invite_decline = service<srv_tag<"invite_decline">>
     ([](const login_checker_prologue& prologue, const rfr<invite_id_payload>& query){
       db::connector cn{dbname};
-      invite_r i = invite::get(cn, query->invite_id).or_throw<invite_does_not_exist>();
+      invite_r i = root_get<invite>(cn, query->invite_id).or_throw<invite_does_not_exist>();
 
       if (i->get_guest() != prologue.user && i->get_event()->get_organizer() != prologue.user){
 	throw unauthorized();
@@ -1139,7 +1139,7 @@ namespace events {
   auto _book = service<srv_tag<"book">>
     ([](const login_checker_prologue& prologue, const rfr<book_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
 
       if (e->is_private()){
 	throw unauthorized();
@@ -1166,7 +1166,7 @@ namespace events {
   auto _booking_get = service<srv_tag<"booking_get">>
     ([](const login_checker_prologue& prologue, const rfr<booking_id_payload>& query){
       db::connector cn{dbname};
-      booking_r b = booking::get(cn, query->booking_id).or_throw<booking_does_not_exist>();
+      booking_r b = root_get<booking>(cn, query->booking_id).or_throw<booking_does_not_exist>();
       organizer_host_or_guest_checker()(b, prologue.user);
       return make<booking_and_event_data_payload>(b);
     });
@@ -1175,7 +1175,7 @@ namespace events {
   auto _booking_cancel = service<srv_tag<"booking_cancel">>
     ([](const login_checker_prologue& prologue, const rfr<booking_id_payload>& query){
       db::connector cn{dbname};
-      booking_r b = booking::get(cn, query->booking_id).or_throw<booking_does_not_exist>();
+      booking_r b = root_get<booking>(cn, query->booking_id).or_throw<booking_does_not_exist>();
       organizer_or_guest_checker()(b, prologue.user);
       b->cancel();
     });
@@ -1188,9 +1188,9 @@ namespace events {
   auto _check_in = service<srv_tag<"check_in">>
     ([](const login_checker_prologue& prologue, const rfr<check_in_payload>& query){
       db::connector cn{dbname};
-      event_r e = event::get(cn, query->event_id).or_throw<event_does_not_exist>();
+      event_r e = root_get<event>(cn, query->event_id).or_throw<event_does_not_exist>();
       organizer_checker()(e, prologue.user);
-      booking_r b = booking::get(cn, query->booking_id).or_throw<booking_does_not_exist>();
+      booking_r b = root_get<booking>(cn, query->booking_id).or_throw<booking_does_not_exist>();
 
       // Checking that the booking corresponds to the event being checked-in.
       if (b->get_event() != e){
@@ -1344,7 +1344,7 @@ namespace events {
       login_checker_prologue(u) // The user must log in.
     {
       doc_id vid = query->venue_id;
-      venue_r v = venue::get(cn, vid).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, vid).or_throw<venue_does_not_exist>();
 
       if (v->get_owner() != user){
 	throw unauthorized();
@@ -1402,7 +1402,7 @@ namespace events {
   auto _news_post = service<srv_tag<"news_post">>
     ([](const login_checker_prologue& prologue, const rfr<news_create_payload>& query){
       db::connector cn{dbname};
-      venue_r v = venue::get(cn, query->venue_id).or_throw<venue_does_not_exist>();
+      venue_r v = root_get<venue>(cn, query->venue_id).or_throw<venue_does_not_exist>();
       owner_checker()(v, prologue.user);
       return make<news_id_payload>(make<news>(cn, v, query->text, query->expiry_timestamp));
     });
@@ -1410,7 +1410,7 @@ namespace events {
   auto _news_remove = service<srv_tag<"news_remove">>
     ([](const login_checker_prologue& prologue, const rfr<news_id_payload>& query){
       db::connector cn{dbname};
-      news_r n = news::get(cn, query->news_id).or_throw<news_does_not_exist>();
+      news_r n = root_get<news>(cn, query->news_id).or_throw<news_does_not_exist>();
       owner_checker()(n->get_venue(), prologue.user);
       n->unpublish();
     });
