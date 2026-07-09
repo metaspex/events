@@ -194,8 +194,8 @@ namespace events {
 
   class min_app_version_payload: public element<>
   {
-    HX2A_ELEMENT(min_app_version_payload, type_tag<"min_app_version_pld">, element,
-		 ((_min_app_version, "v")));
+    HX2A_TYPE(min_app_version_payload, type_tag<"min_app_version_pld">, element,
+              ((_min_app_version, "v")));
   public:
 
     min_app_version_payload():
@@ -208,13 +208,13 @@ namespace events {
 
   class user_data_payload: public element<>
   {
-    HX2A_ELEMENT(user_data_payload, type_tag<"user_data_pld">, element,
-		 ((user_doc_id, user_doc_id_tag),
-		  (user_id, user_id_tag),
-		  (first_name, first_name_tag),
-		  (last_name, last_name_tag),
-		  (email, email_tag),
-		  (alternate_email, alternate_email_tag)));
+    HX2A_TYPE(user_data_payload, type_tag<"user_data_pld">, element,
+              ((user_doc_id, user_doc_id_tag),
+               (user_id, user_id_tag),
+               (first_name, first_name_tag),
+               (last_name, last_name_tag),
+               (email, email_tag),
+               (alternate_email, alternate_email_tag)));
   public:
 
     user_data_payload(const user_r& u):
@@ -237,8 +237,8 @@ namespace events {
 
   class images_payload: public element<>
   {
-    HX2A_ELEMENT(images_payload, type_tag<"images_pld">, element,
-		 ((images, images_tag)));
+    HX2A_TYPE(images_payload, type_tag<"images_pld">, element,
+              ((images, images_tag)));
   public:
 
     slot_vector<string> images;
@@ -246,8 +246,8 @@ namespace events {
   
   class venue_claim_id_payload: public element<>
   {
-    HX2A_ELEMENT(venue_claim_id_payload, type_tag<"venue_claim_id_pld">, element,
-		 ((venue_claim_id, venue_claim_id_tag)));
+    HX2A_TYPE(venue_claim_id_payload, type_tag<"venue_claim_id_pld">, element,
+              ((venue_claim_id, venue_claim_id_tag)));
   public:
 
     venue_claim_id_payload(const venue_claim_r& v):
@@ -260,8 +260,8 @@ namespace events {
 
   class venue_id_payload: public element<>
   {
-    HX2A_ELEMENT(venue_id_payload, type_tag<"venue_id_pld">, element,
-		 ((venue_id, venue_id_tag)));
+    HX2A_TYPE(venue_id_payload, type_tag<"venue_id_pld">, element,
+              ((venue_id, venue_id_tag)));
   public:
 
     venue_id_payload(const venue_r& v):
@@ -274,18 +274,18 @@ namespace events {
 
   class venue_data_payload: public query_name
   {
-    HX2A_ELEMENT(venue_data_payload, type_tag<"venue_data_pld">, query_name,
-		 ((owner, owner_tag),
-		  (is_private, private_tag),
-		  (category, category_tag),
-		  (category_description, category_description_tag),
-		  (pos, position_tag),
-		  (addr, address_tag),
-		  (capacity, capacity_tag),
-		  (description, description_tag),
-		  (event_confirmation_required, event_confirmation_required_tag),
-		  (images, images_tag),
-		  (rating, rating_tag)));
+    HX2A_TYPE(venue_data_payload, type_tag<"venue_data_pld">, query_name,
+              ((owner, owner_tag),
+               (is_private, private_tag),
+               (category, category_tag),
+               (category_description, category_description_tag),
+               (pos, position_tag),
+               (addr, address_tag),
+               (capacity, capacity_tag),
+               (description, description_tag),
+               (event_confirmation_required, event_confirmation_required_tag),
+               (images, images_tag),
+               (rating, rating_tag)));
   public:
 
     venue_data_payload(serial_t):
@@ -361,8 +361,8 @@ namespace events {
 
   class venue_data_with_id_payload: public venue_data_payload
   {
-    HX2A_ELEMENT(venue_data_with_id_payload, type_tag<"venue_data_with_id_pld">, venue_data_payload,
-		 ((venue_id, venue_id_tag)));
+    HX2A_TYPE(venue_data_with_id_payload, type_tag<"venue_data_with_id_pld">, venue_data_payload,
+              ((venue_id, venue_id_tag)));
   public:
 
     venue_data_with_id_payload(const venue_r& v):
@@ -376,10 +376,10 @@ namespace events {
   
   class venue_claim_data_payload: public element<>
   {
-    HX2A_ELEMENT(venue_claim_data_payload, type_tag<"venue_claim_data_pld">, element,
-		 ((timestamp, timestamp_tag),
-		  (user_data, user_tag),
-		  (venue_data, venue_tag)));
+    HX2A_TYPE(venue_claim_data_payload, type_tag<"venue_claim_data_pld">, element,
+              ((timestamp, timestamp_tag),
+               (user_data, user_tag),
+               (venue_data, venue_tag)));
   public:
 
     venue_claim_data_payload(const venue_claim_r& vc):
@@ -396,16 +396,16 @@ namespace events {
   
   class venue_update_payload: public venue_id_payload
   {
-    HX2A_ELEMENT(venue_update_payload, type_tag<"venue_update_pld">, venue_id_payload,
-		 ((name, name_tag),
-		  (category, category_tag),
-		  (category_description, category_description_tag),
-		  (addr, address_tag),
-		  (capacity, capacity_tag),
-		  (description, description_tag),
-		  (event_confirmation_required, event_confirmation_required_tag),
-		  (images, images_tag),
-		  (rating, rating_tag)));
+    HX2A_TYPE(venue_update_payload, type_tag<"venue_update_pld">, venue_id_payload,
+              ((name, name_tag),
+               (category, category_tag),
+               (category_description, category_description_tag),
+               (addr, address_tag),
+               (capacity, capacity_tag),
+               (description, description_tag),
+               (event_confirmation_required, event_confirmation_required_tag),
+               (images, images_tag),
+               (rating, rating_tag)));
   public:
 
     venue_update_payload(serial_t):
@@ -441,8 +441,8 @@ namespace events {
 
   class venue_update_images_payload: public images_payload
   {
-    HX2A_ELEMENT(venue_update_images_payload, type_tag<"venue_update_images_pld">, images_payload,
-		 ((venue_id, venue_id_tag)));
+    HX2A_TYPE(venue_update_images_payload, type_tag<"venue_update_images_pld">, images_payload,
+              ((venue_id, venue_id_tag)));
   public:
 
     slot<doc_id> venue_id;
@@ -450,8 +450,8 @@ namespace events {
 
   class venue_transfer_payload: public venue_id_payload
   {
-    HX2A_ELEMENT(venue_transfer_payload, type_tag<"venue_transfer_pld">, venue_id_payload,
-		 ((new_owner_id, new_owner_id_tag)));
+    HX2A_TYPE(venue_transfer_payload, type_tag<"venue_transfer_pld">, venue_id_payload,
+              ((new_owner_id, new_owner_id_tag)));
   public:
 
     slot<doc_id> new_owner_id;
@@ -460,8 +460,8 @@ namespace events {
   // The search results need to incorporate the document identifier.
   class venue_search_data_payload: public venue_data_payload
   {
-    HX2A_ELEMENT(venue_search_data_payload, type_tag<"venue_search_data_pld">, venue_data_payload,
-		 ((id, id_tag)));
+    HX2A_TYPE(venue_search_data_payload, type_tag<"venue_search_data_pld">, venue_data_payload,
+              ((id, id_tag)));
   public:
 
     venue_search_data_payload(const venue_r& v):
@@ -475,8 +475,8 @@ namespace events {
 
   class venue_search_query: public area
   {
-    HX2A_ELEMENT(venue_search_query, type_tag<"venue_search_query">, area,
-		 ((categories, categories_tag)));
+    HX2A_TYPE(venue_search_query, type_tag<"venue_search_query">, area,
+              ((categories, categories_tag)));
   public:
     
     slot_vector<category_t> categories;
@@ -484,8 +484,8 @@ namespace events {
   
   class venue_search_reply: public element<>
   {
-    HX2A_ELEMENT(venue_search_reply, type_tag<"venue_search_reply">, element,
-		 ((venues, venues_tag)));
+    HX2A_TYPE(venue_search_reply, type_tag<"venue_search_reply">, element,
+              ((venues, venues_tag)));
   public:
 
     // Created empty, and getting venues data pushed.
@@ -505,8 +505,8 @@ namespace events {
   
   class event_id_payload: public element<>
   {
-    HX2A_ELEMENT(event_id_payload, type_tag<"event_id_pld">, element,
-		 ((event_id, event_id_tag)));
+    HX2A_TYPE(event_id_payload, type_tag<"event_id_pld">, element,
+              ((event_id, event_id_tag)));
   public:
 
     event_id_payload(const event_r& e):
@@ -519,17 +519,17 @@ namespace events {
 
   class event_create_payload: public query_name
   {
-    HX2A_ELEMENT(event_create_payload, type_tag<"event_create_pld">, query_name,
-		 ((venue_id, venue_id_tag),
-		  (is_private, private_tag),
-		  (category, category_tag),
-		  (category_description, category_description_tag),
-		  (capacity, capacity_tag),
-		  (start, start_tag),
-		  (duration, duration_tag),
-		  (bookings_notice_time, booking_notice_time_tag),
-		  (organizer_display_name, organizer_display_name_tag),
-		  (images, images_tag)));
+    HX2A_TYPE(event_create_payload, type_tag<"event_create_pld">, query_name,
+              ((venue_id, venue_id_tag),
+               (is_private, private_tag),
+               (category, category_tag),
+               (category_description, category_description_tag),
+               (capacity, capacity_tag),
+               (start, start_tag),
+               (duration, duration_tag),
+               (bookings_notice_time, booking_notice_time_tag),
+               (organizer_display_name, organizer_display_name_tag),
+               (images, images_tag)));
   public:
 
     event_create_payload(serial_t):
@@ -597,13 +597,13 @@ namespace events {
   // with previous versions of the App. To be removed at some points.
   class event_data_payload: public event_create_payload
   {
-    HX2A_ELEMENT(event_data_payload, type_tag<"event_data_pld">, event_create_payload,
-		 ((organizer, organizer_tag),
-		  (venue_name, venue_name_tag),
-		  (venue_data, venue_tag),
-		  (state, state_tag),
-		  (conversation_id, conversation_id_tag),
-		  (bookable, bookable_tag)));
+    HX2A_TYPE(event_data_payload, type_tag<"event_data_pld">, event_create_payload,
+              ((organizer, organizer_tag),
+               (venue_name, venue_name_tag),
+               (venue_data, venue_tag),
+               (state, state_tag),
+               (conversation_id, conversation_id_tag),
+               (bookable, bookable_tag)));
   public:
 
     event_data_payload(const event_r& e):
@@ -634,8 +634,8 @@ namespace events {
 
   class event_data_with_id_payload: public event_data_payload
   {
-    HX2A_ELEMENT(event_data_with_id_payload, type_tag<"event_data_with_id_pld">, event_data_payload,
-		 ((event_id, event_id_tag)));
+    HX2A_TYPE(event_data_with_id_payload, type_tag<"event_data_with_id_pld">, event_data_payload,
+              ((event_id, event_id_tag)));
   public:
 
     event_data_with_id_payload(const event_r& e):
@@ -649,17 +649,17 @@ namespace events {
   
   class event_details_payload: public element<>
   {
-    HX2A_ELEMENT(event_details_payload, type_tag<"event_details_pld">, element,
-		 ((event_id, event_id_tag),
-		  (name, name_tag),
-		  (is_private, private_tag),
-		  (category, category_tag),
-		  (category_description, category_description_tag),
-		  (start, start_tag),
-		  (duration, duration_tag),
-		  (bookings_notice_time, booking_notice_time_tag),
-		  (organizer_display_name, organizer_display_name_tag),
-		  (venue, venue_tag)));
+    HX2A_TYPE(event_details_payload, type_tag<"event_details_pld">, element,
+              ((event_id, event_id_tag),
+               (name, name_tag),
+               (is_private, private_tag),
+               (category, category_tag),
+               (category_description, category_description_tag),
+               (start, start_tag),
+               (duration, duration_tag),
+               (bookings_notice_time, booking_notice_time_tag),
+               (organizer_display_name, organizer_display_name_tag),
+               (venue, venue_tag)));
   public:
 
     event_details_payload(const event_r& e):
@@ -691,13 +691,13 @@ namespace events {
   // A richer version for the organizer.
   class event_data_for_organizer_payload: public event_create_payload
   {
-    HX2A_ELEMENT(event_data_for_organizer_payload, type_tag<"event_data_for_organizer_pld">, event_create_payload,
-		 ((venue_name, venue_name_tag),
-		  (state, state_tag),
-		  (conversation_id, conversation_id_tag),
-		  (bookable, bookable_tag),
-		  (bookings_count, bookings_count_tag),
-		  (report_count, report_count_tag)));
+    HX2A_TYPE(event_data_for_organizer_payload, type_tag<"event_data_for_organizer_pld">, event_create_payload,
+              ((venue_name, venue_name_tag),
+               (state, state_tag),
+               (conversation_id, conversation_id_tag),
+               (bookable, bookable_tag),
+               (bookings_count, bookings_count_tag),
+               (report_count, report_count_tag)));
   public:
 
     event_data_for_organizer_payload(const event_r& e):
@@ -727,8 +727,8 @@ namespace events {
 
   class event_data_for_venue_owner_payload: public event_data_for_organizer_payload
   {
-    HX2A_ELEMENT(event_data_for_venue_owner_payload, type_tag<"event_data_for_venue_owner_pld">, event_data_for_organizer_payload,
-		 ((organizer, organizer_tag)));
+    HX2A_TYPE(event_data_for_venue_owner_payload, type_tag<"event_data_for_venue_owner_pld">, event_data_for_organizer_payload,
+              ((organizer, organizer_tag)));
   public:
 
     event_data_for_venue_owner_payload(const event_r& e):
@@ -749,11 +749,11 @@ namespace events {
 
   class smart_event_data_payload: public event_id_payload
   {
-    HX2A_ELEMENT(smart_event_data_payload, type_tag<"smart_event_data_pld">, event_id_payload,
-		 ((event_name, event_name_tag),
-		  (state, state_tag),
-		  (start, start_tag),
-		  (end, end_tag)));
+    HX2A_TYPE(smart_event_data_payload, type_tag<"smart_event_data_pld">, event_id_payload,
+              ((event_name, event_name_tag),
+               (state, state_tag),
+               (start, start_tag),
+               (end, end_tag)));
   public:
 
     smart_event_data_payload(const event_r& e):
@@ -774,14 +774,14 @@ namespace events {
   // No private indicator, as the data are just for public events.
   class public_event_data_payload: public smart_event_data_payload
   {
-    HX2A_ELEMENT(public_event_data_payload, type_tag<"smart_complete_event_data_pld">, smart_event_data_payload,
-		 ((category, category_tag),
-		  (category_description, category_description_tag),
-		  (capacity, capacity_tag),
-		  (bookings_notice_time, booking_notice_time_tag),
-		  (organizer_display_name, organizer_display_name_tag),
-		  (images, images_tag),
-		  (bookable, bookable_tag)));
+    HX2A_TYPE(public_event_data_payload, type_tag<"smart_complete_event_data_pld">, smart_event_data_payload,
+              ((category, category_tag),
+               (category_description, category_description_tag),
+               (capacity, capacity_tag),
+               (bookings_notice_time, booking_notice_time_tag),
+               (organizer_display_name, organizer_display_name_tag),
+               (images, images_tag),
+               (bookable, bookable_tag)));
   public:
 
     public_event_data_payload(const event_r& e):
@@ -807,14 +807,14 @@ namespace events {
   
   class event_update_payload: public event_id_payload
   {
-    HX2A_ELEMENT(event_update_payload, type_tag<"event_update_pld">, event_id_payload,
-		 ((name, name_tag),
-		  (category, category_tag),
-		  (category_description, category_description_tag),
-		  (capacity, capacity_tag),
-		  (start, start_tag),
-		  (duration, duration_tag),
-		  (bookings_notice_time, booking_notice_time_tag)));
+    HX2A_TYPE(event_update_payload, type_tag<"event_update_pld">, event_id_payload,
+              ((name, name_tag),
+               (category, category_tag),
+               (category_description, category_description_tag),
+               (capacity, capacity_tag),
+               (start, start_tag),
+               (duration, duration_tag),
+               (bookings_notice_time, booking_notice_time_tag)));
   public:
 
     slot<string> name;
@@ -828,8 +828,8 @@ namespace events {
   
   class event_update_images_payload: public images_payload
   {
-    HX2A_ELEMENT(event_update_images_payload, type_tag<"event_update_images_pld">, images_payload,
-		 ((event_id, event_id_tag)));
+    HX2A_TYPE(event_update_images_payload, type_tag<"event_update_images_pld">, images_payload,
+              ((event_id, event_id_tag)));
   public:
 
     slot<doc_id> event_id;
@@ -837,8 +837,8 @@ namespace events {
 
   class event_change_venue_payload: public event_id_payload
   {
-    HX2A_ELEMENT(event_change_venue_payload, type_tag<"event_change_venue_pld">, event_id_payload,
-		 ((venue_id, venue_id_tag)));
+    HX2A_TYPE(event_change_venue_payload, type_tag<"event_change_venue_pld">, event_id_payload,
+              ((venue_id, venue_id_tag)));
   public:
 
     slot<doc_id> venue_id;
@@ -846,8 +846,8 @@ namespace events {
 
   class event_cancel_payload: public event_id_payload
   {
-    HX2A_ELEMENT(event_cancel_payload, type_tag<"event_cancel_pld">, event_id_payload,
-		 ((reason, reason_tag)));
+    HX2A_TYPE(event_cancel_payload, type_tag<"event_cancel_pld">, event_id_payload,
+              ((reason, reason_tag)));
   public:
 
     slot<string> reason;
@@ -855,8 +855,8 @@ namespace events {
 
   class event_search_data_payload: public event_data_payload
   {
-    HX2A_ELEMENT(event_search_data_payload, type_tag<"event_search_data_pld">, event_data_payload,
-		 ((event_id, event_id_tag)));
+    HX2A_TYPE(event_search_data_payload, type_tag<"event_search_data_pld">, event_data_payload,
+              ((event_id, event_id_tag)));
   public:
 
     event_search_data_payload(const event_r& e):
@@ -870,8 +870,8 @@ namespace events {
 
   class event_search_reply: public element<>
   {
-    HX2A_ELEMENT(event_search_reply, type_tag<"event_search_reply">, element,
-		 ((events, events_tag)));
+    HX2A_TYPE(event_search_reply, type_tag<"event_search_reply">, element,
+              ((events, events_tag)));
   public:
 
     // Created empty, and getting events data pushed.
@@ -889,10 +889,10 @@ namespace events {
 
   class event_search_query: public element<>
   {
-    HX2A_ELEMENT(event_search_query, type_tag<"event_search_pld">, element,
-		 ((the_area, area_tag),
-		  (the_period, start_tag),
-		  (categories, categories_tag)));
+    HX2A_TYPE(event_search_query, type_tag<"event_search_pld">, element,
+              ((the_area, area_tag),
+               (the_period, start_tag),
+               (categories, categories_tag)));
   public:
 
     own<area> the_area;
@@ -903,8 +903,8 @@ namespace events {
 
   class open_invite_data_payload: public element<>
   {
-    HX2A_ELEMENT(open_invite_data_payload, type_tag<"open_invite_data_pld">, element,
-		 ((contacts, contacts_tag)));
+    HX2A_TYPE(open_invite_data_payload, type_tag<"open_invite_data_pld">, element,
+              ((contacts, contacts_tag)));
   public:
 
     open_invite_data_payload(const open_invite_r&);
@@ -916,8 +916,8 @@ namespace events {
   
   class open_invite_create_payload: public element<>
   {
-    HX2A_ELEMENT(open_invite_create_payload, type_tag<"open_invite_create_pld">, element,
-		 ((event_id, event_id_tag)));
+    HX2A_TYPE(open_invite_create_payload, type_tag<"open_invite_create_pld">, element,
+              ((event_id, event_id_tag)));
   public:
 
     open_invite_create_payload(const open_invite_r& i):
@@ -930,10 +930,10 @@ namespace events {
   
   class open_invite_add_contact_payload: public email_payload
   {
-    HX2A_ELEMENT(open_invite_add_contact_payload, type_tag<"open_invite_add_contact_pld">, email_payload,
-		 ((invite_id, invite_id_tag),
-		  (first_name, first_name_tag),
-		  (last_name, last_name_tag)));
+    HX2A_TYPE(open_invite_add_contact_payload, type_tag<"open_invite_add_contact_pld">, email_payload,
+              ((invite_id, invite_id_tag),
+               (first_name, first_name_tag),
+               (last_name, last_name_tag)));
   public:
 
     slot<doc_id> invite_id;
@@ -943,9 +943,9 @@ namespace events {
   
   class invite_create_payload: public element<>
   {
-    HX2A_ELEMENT(invite_create_payload, type_tag<"invite_create_pld">, element,
-		 ((event_id, event_id_tag),
-		  (guest_id, guest_id_tag)));
+    HX2A_TYPE(invite_create_payload, type_tag<"invite_create_pld">, element,
+              ((event_id, event_id_tag),
+               (guest_id, guest_id_tag)));
   public:
 
     invite_create_payload(const invite_r& i):
@@ -960,8 +960,8 @@ namespace events {
   
   class open_invite_id_payload: public element<>
   {
-    HX2A_ELEMENT(open_invite_id_payload, type_tag<"open_invite_id_pld">, element,
-		 ((invite_id, invite_id_tag)));
+    HX2A_TYPE(open_invite_id_payload, type_tag<"open_invite_id_pld">, element,
+              ((invite_id, invite_id_tag)));
   public:
 
     open_invite_id_payload(const open_invite_r& i):
@@ -974,8 +974,8 @@ namespace events {
 
   class invite_id_payload: public element<>
   {
-    HX2A_ELEMENT(invite_id_payload, type_tag<"invite_id_pld">, element,
-		 ((invite_id, invite_id_tag)));
+    HX2A_TYPE(invite_id_payload, type_tag<"invite_id_pld">, element,
+              ((invite_id, invite_id_tag)));
   public:
 
     invite_id_payload(const invite_r& i):
@@ -988,11 +988,11 @@ namespace events {
 
   class invite_data_payload: public element<>
   {
-    HX2A_ELEMENT(invite_data_payload, type_tag<"invite_data_pld">, element,
-		 ((host_data, host_tag),
-		  (guest_data, guest_tag),
-		  (event_details, event_tag),
-		  (invite_creation_time, invite_creation_time_tag)));
+    HX2A_TYPE(invite_data_payload, type_tag<"invite_data_pld">, element,
+              ((host_data, host_tag),
+               (guest_data, guest_tag),
+               (event_details, event_tag),
+               (invite_creation_time, invite_creation_time_tag)));
   public:
 
     invite_data_payload(const invite_r& i):
@@ -1013,10 +1013,10 @@ namespace events {
   // Works for open invites too.
   class invite_details_payload: public element<>
   {
-    HX2A_ELEMENT(invite_details_payload, type_tag<"invite_details_pld">, element,
-		 ((host, host_tag),
-		  (event_details, event_tag),
-		  (invite_creation_time, invite_creation_time_tag)));
+    HX2A_TYPE(invite_details_payload, type_tag<"invite_details_pld">, element,
+              ((host, host_tag),
+               (event_details, event_tag),
+               (invite_creation_time, invite_creation_time_tag)));
   public:
 
     invite_details_payload(const invite_r& i):
@@ -1040,9 +1040,9 @@ namespace events {
   
   class invite_accept_payload: public invite_id_payload
   {
-    HX2A_ELEMENT(invite_accept_payload, type_tag<"invite_accept_pld">, invite_id_payload,
-		 ((display_name, display_name_tag),
-		  (note, note_tag)));
+    HX2A_TYPE(invite_accept_payload, type_tag<"invite_accept_pld">, invite_id_payload,
+              ((display_name, display_name_tag),
+               (note, note_tag)));
   public:
 
     slot<string> display_name;
@@ -1051,10 +1051,10 @@ namespace events {
   
   class book_payload: public element<>
   {
-    HX2A_ELEMENT(book_payload, type_tag<"book_pld">, element,
-		 ((event_id, event_id_tag),
-		  (display_name, display_name_tag),
-		  (note, note_tag)));
+    HX2A_TYPE(book_payload, type_tag<"book_pld">, element,
+              ((event_id, event_id_tag),
+               (display_name, display_name_tag),
+               (note, note_tag)));
   public:
 
     slot<doc_id> event_id;
@@ -1064,8 +1064,8 @@ namespace events {
   
   class booking_id_payload: public element<>
   {
-    HX2A_ELEMENT(booking_id_payload, type_tag<"booking_id_pld">, element,
-		 ((booking_id, booking_id_tag)));
+    HX2A_TYPE(booking_id_payload, type_tag<"booking_id_pld">, element,
+              ((booking_id, booking_id_tag)));
   public:
 
     booking_id_payload(const booking_r& b):
@@ -1078,13 +1078,13 @@ namespace events {
 
   class booking_data_payload: public element<>
   {
-    HX2A_ELEMENT(booking_data_payload, type_tag<"booking_data_pld">, element,
-		 ((host_data, host_tag),
-		  (guest_data, guest_tag),
-		  (note, note_tag),
-		  (booking_creation_time, booking_creation_time_tag),
-		  (booking_update_time, booking_update_time_tag),
-		  (check_in_time, check_in_time_tag)));
+    HX2A_TYPE(booking_data_payload, type_tag<"booking_data_pld">, element,
+              ((host_data, host_tag),
+               (guest_data, guest_tag),
+               (note, note_tag),
+               (booking_creation_time, booking_creation_time_tag),
+               (booking_update_time, booking_update_time_tag),
+               (check_in_time, check_in_time_tag)));
   public:
 
     booking_data_payload(const booking_r& b):
@@ -1112,8 +1112,8 @@ namespace events {
 
   class booking_data_with_id_payload: public booking_data_payload
   {
-    HX2A_ELEMENT(booking_data_with_id_payload, type_tag<"booking_data_with_id_pld">, booking_data_payload,
-		 ((booking_id, booking_id_tag)));
+    HX2A_TYPE(booking_data_with_id_payload, type_tag<"booking_data_with_id_pld">, booking_data_payload,
+              ((booking_id, booking_id_tag)));
   public:
 
     booking_data_with_id_payload(const booking_r& b):
@@ -1129,10 +1129,10 @@ namespace events {
   // At some point they should be removed.
   class booking_and_event_data_payload: public booking_data_payload
   {
-    HX2A_ELEMENT(booking_and_event_data_payload, type_tag<"booking_and_event_data_pld">, booking_data_payload,
-		 ((event_id, event_id_tag),
-		  (event_name, event_name_tag),
-		  (event_data, event_tag)));
+    HX2A_TYPE(booking_and_event_data_payload, type_tag<"booking_and_event_data_pld">, booking_data_payload,
+              ((event_id, event_id_tag),
+               (event_name, event_name_tag),
+               (event_data, event_tag)));
   public:
 
     booking_and_event_data_payload(const booking_r& b):
@@ -1155,9 +1155,9 @@ namespace events {
 
   class booking_and_user_data_payload: public booking_data_payload
   {
-    HX2A_ELEMENT(booking_and_user_data_payload, type_tag<"booking_and_user_data_pld">, booking_data_payload,
-		 ((display_name, display_name_tag),
-		  (messenger_participation_id, messenger_participation_id_tag)));
+    HX2A_TYPE(booking_and_user_data_payload, type_tag<"booking_and_user_data_pld">, booking_data_payload,
+              ((display_name, display_name_tag),
+               (messenger_participation_id, messenger_participation_id_tag)));
   public:
 
     booking_and_user_data_payload(const booking_r& b):
@@ -1180,8 +1180,8 @@ namespace events {
   // The check-in agent is operating for a given event, and the guest presents their booking id.
   class check_in_payload: public event_id_payload
   {
-    HX2A_ELEMENT(check_in_payload, type_tag<"check_in_pld">, event_id_payload,
-		 ((booking_id, booking_id_tag)));
+    HX2A_TYPE(check_in_payload, type_tag<"check_in_pld">, event_id_payload,
+              ((booking_id, booking_id_tag)));
   public:
     
     slot<doc_id> booking_id;
@@ -1189,8 +1189,8 @@ namespace events {
 
   class news_id_payload: public element<>
   {
-    HX2A_ELEMENT(news_id_payload, type_tag<"news_id_pld">, element,
-		 ((news_id, news_id_tag)));
+    HX2A_TYPE(news_id_payload, type_tag<"news_id_pld">, element,
+              ((news_id, news_id_tag)));
   public:
 
     news_id_payload(const news_r& v):
@@ -1203,9 +1203,9 @@ namespace events {
 
   class news_create_payload: public venue_id_payload
   {
-    HX2A_ELEMENT(news_create_payload, type_tag<"news_create_pld">, venue_id_payload,
-		 ((text, text_tag),
-		  (expiry_timestamp, expiry_timestamp_tag)));
+    HX2A_TYPE(news_create_payload, type_tag<"news_create_pld">, venue_id_payload,
+              ((text, text_tag),
+               (expiry_timestamp, expiry_timestamp_tag)));
   public:
 
     news_create_payload(const news_r& n):
@@ -1221,10 +1221,10 @@ namespace events {
 
   class news_data_payload: public element<>
   {
-    HX2A_ELEMENT(news_data_payload, type_tag<"news_data_pld">, element,
-		 ((venue_data, venue_tag),
-		  (text, text_tag),
-		  (expiry_timestamp, expiry_timestamp_tag)));
+    HX2A_TYPE(news_data_payload, type_tag<"news_data_pld">, element,
+              ((venue_data, venue_tag),
+               (text, text_tag),
+               (expiry_timestamp, expiry_timestamp_tag)));
   public:
 
     news_data_payload(const news_r& n):

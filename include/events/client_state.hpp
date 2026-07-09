@@ -30,7 +30,7 @@ namespace events {
   // state document.
   class client_state: public root<>
   {
-    HX2A_ROOT(client_state, type_tag<"client_state">, 1, root,
+    HX2A_TYPE(client_state, type_tag<"client_state">, root,
 	      ((_user, "u"),
 	       (_messenger_client_state, "m")));
 

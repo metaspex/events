@@ -76,7 +76,7 @@ namespace events {
 
   class venue_claim: public root<>
   {
-    HX2A_ROOT(venue_claim, type_tag<"venue_claim">, 1, root,
+    HX2A_TYPE(venue_claim, type_tag<"venue_claim">, root,
 	      ((_user, "u"),
 	       (_venue, "v")));
   public:
@@ -109,7 +109,7 @@ namespace events {
   
   class venue: public root<>
   {
-    HX2A_ROOT(venue, type_tag<"venue">, 1, root,
+    HX2A_TYPE(venue, type_tag<"venue">, root,
 	      ((_owner, "o"),
 	       (_name, "n"),
 	       (_private, "p"),
@@ -253,7 +253,7 @@ namespace events {
   // The organizer is not necessarily a guest. He'll need to book the event to be a guest.
   class event: public root<>
   {
-    HX2A_ROOT(event, type_tag<"event">, 1, root,
+    HX2A_TYPE(event, type_tag<"event">, root,
 	      ((_organizer, "o"),
 	       (_name, "n"),
 	       (_private, "p"),
@@ -690,10 +690,10 @@ namespace events {
   // Used as well as a payload.
   class contact: public element<>
   {
-    HX2A_ELEMENT(contact, type_tag<"contact">, element,
-		 ((_first_name, "f"),
-		  (_last_name, "l"),
-		  (_email, "e")));
+    HX2A_TYPE(contact, type_tag<"contact">, element,
+              ((_first_name, "f"),
+               (_last_name, "l"),
+               (_email, "e")));
   public:
 
     contact(const string& first_name, const string& last_name, const string& email):
@@ -723,7 +723,7 @@ namespace events {
   // Invite without an identified guest. The invite can be shared with multiple guests.
   class open_invite: public root<>
   {
-    HX2A_ROOT(open_invite, type_tag<"open_invite">, 1, root,
+    HX2A_TYPE(open_invite, type_tag<"open_invite">, root,
 	      ((_event, "e"),
 	       (_host, "h"),
 	       (_contacts, "c")));
@@ -802,7 +802,7 @@ namespace events {
   // Especially useful for private events.
   class invite: public root<>
   {
-    HX2A_ROOT(invite, type_tag<"invite">, 1, root,
+    HX2A_TYPE(invite, type_tag<"invite">, root,
 	      ((_event, "e"),
 	       (_host, "h"),
 	       (_guest, "g")));
@@ -861,7 +861,7 @@ namespace events {
   // distinct from the event organizer.
   class booking: public root<>
   {
-    HX2A_ROOT(booking, type_tag<"booking">, 1, root,
+    HX2A_TYPE(booking, type_tag<"booking">, root,
 	      ((_event, "e"),
 	       (_host, "h"),
 	       (_guest, "g"),
@@ -968,7 +968,7 @@ namespace events {
 
   class news: public root<>
   {
-    HX2A_ROOT(news, type_tag<"news">, 1, root,
+    HX2A_TYPE(news, type_tag<"news">, root,
 	      ((_venue, "v"),
 	       (_text, "t"),
 	       (_expiry_timestamp, "e")));
