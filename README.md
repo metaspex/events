@@ -23,7 +23,7 @@ small. It is comparable to the size of a single modern Internet HTML page.
 
 The binary contains all the 291 web services and associated business logic.
 
-The same binary can be deployed without recompilation on Couchbase or MongoDB.
+The same binary can be deployed without recompilation on [Couchbase](https://www.couchbase.com/) or [MongoDB](https://www.mongodb.com/).
 Changing the underlying database requires only an update of the configuration
 file.
 
