@@ -1,4 +1,4 @@
-Warning: you need the [Metaspex](http://metaspex.com) product to compile this application. Please contact us at info@metaspex.com to get access to [Metaspex](http://metaspex.com).
+Warning: you need the [Metaspex](http://metaspex.com) product to compile this application. Please contact us at info@metaspex.com to get access to Metaspex.
 
 This repository contains an entire professional application counting:
 
@@ -12,7 +12,7 @@ This application performs event management. The ontology deals with venues,
 guests, hosts, organizers, bookings, invites and more.
 
 Except sending texts, App notifications and sending email, the back end does
-not leverage any third-party system. It is a monolith. [Metaspex](http://metaspex.com) is capable
+not leverage any third-party system. It is a monolith. Metaspex is capable
 of producing multiple micro services from the same specification, but that
 need is usually pushed to extreme needs. In this specific instance it was not
 needed to do more than a simple monolith.
@@ -28,7 +28,7 @@ Changing the underlying database requires only an update of the configuration
 file.
 
 The source code is made public not for compilation but to inspect the contents
-of a vast [Metaspex](http://metaspex.com) application.
+of a vast Metaspex application.
 
 The files of interest you can consult first are:
 
