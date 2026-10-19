@@ -4,9 +4,9 @@ This repository contains an entire professional application counting:
 
 - 74 fully custom web services.
 - 36 messaging-related web services.
-- 181 Metaspex foundation ontology web services (e.g., security-related).
+- 182 Metaspex foundation ontology web services (e.g., security-related).
 
-For a grand total of 291 web services.
+For a grand total of 292 web services.
 
 This application performs event management. The ontology deals with venues,
 guests, hosts, organizers, bookings, invites and more.
