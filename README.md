@@ -40,4 +40,4 @@ The files of interest you can consult first are:
 
 Any question, please email support@metaspex.com
 
-Copyright 2025 [Metaspex](http://metaspex.com) LLC
+Copyright 2026 [Metaspex](http://metaspex.com) LLC
